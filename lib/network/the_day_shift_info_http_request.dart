@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import '../models/the_day_shift_info_model.dart';
 import '../screen/login/login_screen.dart';
 
-var error;
 
 class Services {
   Future getDayShiftInfo(id, day) async {
@@ -15,14 +14,14 @@ class Services {
     if (res.statusCode == 200) {
       debugPrint("Data posted successfully");
       print(res.body);
-      json.decode(res.body).toString();
+      var data = json.decode(res.body);
+      data["Result"];
       var jason = res.body;
-      print("dsfghjfnjnv");
       return theDayShiftFromJson(jason);
     } else {
       print(res.body);
-      json.decode(res.body).toString();
-      var jason = res.body;
+      var data = json.decode(res.body);
+      // attendanceStatus = data["Result"];
       print("hello");
       debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
     }

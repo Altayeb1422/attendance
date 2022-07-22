@@ -6,6 +6,8 @@ import '../screen/login/login_screen.dart';
 
 
 
+var attenStatus ;
+
 class AttendanceServices {
   Future getAttenRecStatus(id, day) async {
     var client = http.Client();
@@ -16,13 +18,16 @@ class AttendanceServices {
       print(res.body);
       json.decode(res.body).toString();
       var jason = res.body;
-      print("dsfghjfnjnv");
+      var data = json.decode(res.body);
+      attenStatus = data["Result"];
+      print(attenStatus);
       return attendanceStatusFromJson(jason);
+
     } else {
       print(res.body);
-      json.decode(res.body).toString();
-      var jason = res.body;
-      print("hello");
+      var data = json.decode(res.body);
+      attenStatus = data["Result"];
+      print(attenStatus);
       debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
     }
   }

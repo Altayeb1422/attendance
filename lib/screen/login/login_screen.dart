@@ -13,8 +13,7 @@ import '../../network/attendance_status_http_request.dart';
 import '../../network/the_day_shift_info_http_request.dart';
 import '../attendance/user_check_in_screen.dart';
 
-DateTime now = DateTime.now();
-DateTime date = DateTime(now.year, now.month, now.day);
+
 
 TextEditingController companyNumberController = TextEditingController();
 TextEditingController employeeNumberController = TextEditingController();
@@ -30,16 +29,26 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
    late TheDayShift shiftData;
    late AttendanceStatus attendanceStatus;
+
   var isLoaded = false;
   String _imeiNo = "";
 
   @override
   void initState() {
+    AttendanceServices().getAttenRecStatus(empID, Day());
     initPlatformState();
-    // getDayData();
+    checkStatus();
     super.initState();
   }
-
+   checkStatus(){
+     if(attenStatus == "Not clocked in"){
+       stuts == 0;
+       print(stuts);
+     }else{
+       stuts == 1;
+       print(stuts);
+     }
+   }
   Day() {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -85,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   var companyNumber;
   var employeeNumber;
-
+   var stuts;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -205,6 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       InkWell(
                         onTap: () async {
                           await initPlatformState();
+                          await checkStatus();
                           await RegisterCheck();
                           shiftData = await Services().getDayShiftInfo(empID, Day());
                           attendanceStatus = await AttendanceServices().getAttenRecStatus(empID, Day());
@@ -220,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           clockIn: shiftData.checkIn == null?"--:--":shiftData.checkIn,
                                           location: shiftData.locationName == null? "No Shift available":shiftData.locationName,
                                           dateOn: shiftData.dateOn,
-                                          status: attendanceStatus.status,
+                                          status: stuts,
                                         attenID: attendanceStatus.id,
                                       attenIn: attendanceStatus.attendCheckIn,
                                       attenOut: attendanceStatus.attendCheckOut,

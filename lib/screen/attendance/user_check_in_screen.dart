@@ -3,12 +3,15 @@ import 'package:attendance/screen/user/user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
+import '../../network/attendance_status_http_request.dart';
 import '../../widget/calendar widgets/date_widget.dart';
 import '../../widget/calendar widgets/time_widget.dart';
 import 'package:http/http.dart' as http;
-import '../login/login_screen.dart';
 
 
+DateTime now = DateTime.now();
+String formattedTime = DateFormat.jm().format(now);
+DateTime date = DateTime(now.year, now.month, now.day);
 class UserCheckIn extends StatefulWidget {
    UserCheckIn({Key? key, this.imeiNo, this.empID, this.dateOn,this.attenID,this.attenIn,this.attenOut, this.status, this.location,  this.clockIn, this.clockOut,  this.totalHrs}) : super(key: key);
   String? imeiNo;
@@ -33,27 +36,16 @@ class _UserCheckInState extends State<UserCheckIn> {
   @override
   void initState() {
     super.initState();
-    print(widget.status);
-    print(widget.empID);
-    print(widget.location);
-    print(widget.dateOn);
+    AttendanceServices().getAttenRecStatus(widget.empID,date);
   }
-  String getSystemTime()  {
-    initializeDateFormatting("ar_EG", "en_US");
-    var now = DateTime.now();
-    var formatter = DateFormat.jm() ;
-    // print(formatter.locale);
-    String formatted = formatter.format(now).toString();
-    // print(defaultLocale);
-    return formatted;
-  }
+
   Future updateIN() async {
     var res = await http.post(Uri.parse("http://192.168.15.124/hrm/atte_record_In.php"), body: {
       "LocationName": "Khartoum",
-      "empID": widget.empID.toString(),
+      "empID": widget.empID,
       "DateOn": date.toString(),
-      "AttendCheckIn": getSystemTime.toString(),
-      "Status": "0",
+      "AttendCheckIn": formattedTime.toString(),
+      "Status": attenStatus.toString(),
     }); //sending post request with header data
 
     if (res.statusCode == 200) {
@@ -126,15 +118,21 @@ class _UserCheckInState extends State<UserCheckIn> {
                   children:  [
                     InkWell(
                       onTap: ()async{
+                        print("String ${attenStatus}");
+                        if(attenStatus == 0){
+                          await updateIN();
+                        }else{
+
+                        }
                         // setState(() {
                         //   Astatus = !Astatus!;
                         // });
-                        await updateIN();
-                         if(widget.status == "0"){
-
-                         }else {
-
-                         }
+                        // await updateIN();
+                        //  if(widget.status == "0"){
+                        //
+                        //  }else {
+                        //
+                        //  }
                       },
                       child: Container(
                         decoration: BoxDecoration(
