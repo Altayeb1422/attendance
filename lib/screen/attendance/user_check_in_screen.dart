@@ -1,19 +1,25 @@
 import 'dart:convert';
 import 'package:attendance/screen/user/user.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_file.dart';
 import 'package:intl/intl.dart';
 import '../../network/attendance_status_http_request.dart';
 import '../../widget/calendar widgets/date_widget.dart';
 import '../../widget/calendar widgets/time_widget.dart';
 import 'package:http/http.dart' as http;
 
+import '../login/login_screen.dart';
+
+
 
 DateTime now = DateTime.now();
 String formattedTime = DateFormat.jm().format(now);
-DateTime date = DateTime(now.year, now.month, now.day);
+final DateFormat formatter = DateFormat('yyyy-MM-dd');
+final String formatted = formatter.format(now);
+
+
+
 class UserCheckIn extends StatefulWidget {
-   UserCheckIn({Key? key, this.imeiNo, this.empID, this.dateOn,this.attenID,this.attenIn,this.attenOut, this.status, this.location,  this.clockIn, this.clockOut,  this.totalHrs}) : super(key: key);
+   UserCheckIn({Key? key, this.imeiNo, this.empID,this.attendID, this.dateOn,this.attenID,this.attenIn,this.attenOut, this.status, this.location,  this.clockIn, this.clockOut,  this.totalHrs}) : super(key: key);
   String? imeiNo;
   String? empID;
   String? attenID;
@@ -25,27 +31,57 @@ class UserCheckIn extends StatefulWidget {
   String? attenIn;
   String? attenOut;
   String? dateOn;
+  String? attendID;
 
   @override
   State<UserCheckIn> createState() => _UserCheckInState();
 }
 
 class _UserCheckInState extends State<UserCheckIn> {
-   // AttendanceStatus? attendanceStatus;
+
+
+
 
   @override
   void initState() {
     super.initState();
-    AttendanceServices().getAttenRecStatus(widget.empID,date);
+    print("Employee id:${widget.empID}");
+    print("Day :${formatted.toString()}");
+    // getAttenRecStatus();
+    print("check data:${checkStatus}");
+    print("check data:${attId}");
   }
 
-  Future updateIN() async {
+  Future CheckIN(date,formattedTime ) async {
     var res = await http.post(Uri.parse("http://192.168.15.124/hrm/atte_record_In.php"), body: {
-      "LocationName": "Khartoum",
-      "empID": widget.empID,
+      "LocationName": "Khartoum-Tayif",
+      "empID": widget.empID.toString(),
       "DateOn": date.toString(),
       "AttendCheckIn": formattedTime.toString(),
-      "Status": attenStatus.toString(),
+      "Status": checkStatus.toString(),
+    }); //sending post request with header data
+
+    if (res.statusCode == 200) {
+      print(res.body);
+      print("Post successful"); //print raw response on console
+      var data = json.decode(res.body);
+      // carAdsId = data["AdsId"];
+      // attenID = data["ID"];
+      //decoding json to array
+    } else {
+      debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
+    }
+  }
+
+  Future checkOut(date,formattedTime) async {
+
+    var res = await http.post(Uri.parse("http://192.168.15.124/hrm/atte_record_OUT.php"), body: {
+      "LocationName": "Khartoum-Tayif",
+      "empID": widget.empID.toString(),
+      "DateOn": date.toString(),
+      "AttendCheckOut": formattedTime.toString(),
+      "Status": checkStatus.toString(),
+      "ID": attId.toString(),
     }); //sending post request with header data
 
     if (res.statusCode == 200) {
@@ -58,10 +94,10 @@ class _UserCheckInState extends State<UserCheckIn> {
       debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
     }
   }
-
+   var attenid;
   @override
   Widget build(BuildContext context) {
-    String? Astatus = widget.status;
+
     return Scaffold(
       body: Center(
         child: ListView(
@@ -118,21 +154,32 @@ class _UserCheckInState extends State<UserCheckIn> {
                   children:  [
                     InkWell(
                       onTap: ()async{
-                        print("String ${attenStatus}");
-                        if(attenStatus == 0){
-                          await updateIN();
-                        }else{
+                        DateTime now = DateTime.now();
+                        String formattedTime = DateFormat.jm().format(now);
+                        DateTime date = DateTime(now.year, now.month, now.day);
 
+                        if(checkStatus == 0){
+                          await CheckIN(date,formattedTime);
+                          await AttendanceServices().getAttenRecStatus(empID, date);
+                          print("I have passed");
+                          // attenid =attendanceStatus!.id;
+                          print("Atten Id:$attId");
+                          print("checkStatus ${checkStatus}");
+                          setState(()  {
+                            checkStatus;
+                          });
+
+                          print("checkStatus ${checkStatus}");
+                        }else if(checkStatus == 1){
+                          await checkOut(date,formattedTime);
+                          await AttendanceServices().getAttenRecStatus(empID, date);
+                          print("Atten Id:$attId");
+                          print(formattedTime);
+                          setState(() {
+                            checkStatus;
+                          });
+                          print("checkStatus ${checkStatus}");
                         }
-                        // setState(() {
-                        //   Astatus = !Astatus!;
-                        // });
-                        // await updateIN();
-                        //  if(widget.status == "0"){
-                        //
-                        //  }else {
-                        //
-                        //  }
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -147,7 +194,7 @@ class _UserCheckInState extends State<UserCheckIn> {
                         child: CircleAvatar(
                           minRadius: 120,
                           maxRadius: 120,
-                          backgroundColor:widget.status == 1? Colors.green :Colors.blueAccent,
+                          backgroundColor: checkStatus == 0? Colors.blueAccent:Colors.green,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [

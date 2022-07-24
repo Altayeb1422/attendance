@@ -35,14 +35,14 @@ class AttendanceStatus {
   String? status;
   String? attendCheckIn;
   dynamic attendCheckOut;
-  String? attendanceId;
+  dynamic attendanceId;
   String? deviceIn;
   dynamic deviceOut;
   dynamic dateOut;
   dynamic note;
 
   factory AttendanceStatus.fromJson(Map<String, dynamic> json) => AttendanceStatus(
-    id: json["ID"],
+    id: json["ID"]as String,
     empId: json["empID"],
     recDate: json["RecDate"],
     recName: json["RecName"],

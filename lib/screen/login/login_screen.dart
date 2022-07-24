@@ -28,27 +28,27 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
    late TheDayShift shiftData;
-   late AttendanceStatus attendanceStatus;
+    // AttendanceStatus? attendanceStatus;
 
   var isLoaded = false;
   String _imeiNo = "";
 
   @override
   void initState() {
-    AttendanceServices().getAttenRecStatus(empID, Day());
+    // AttendanceServices().getAttenRecStatus(empID, Day());
     initPlatformState();
-    checkStatus();
+    // checkStatus();
     super.initState();
   }
-   checkStatus(){
-     if(attenStatus == "Not clocked in"){
-       stuts == 0;
-       print(stuts);
-     }else{
-       stuts == 1;
-       print(stuts);
-     }
-   }
+   // checkStatus(){
+   //   if(attenStatus == "Not clocked in"){
+   //     stuts == 0;
+   //     print(stuts);
+   //   }else{
+   //     stuts == 1;
+   //     print(stuts);
+   //   }
+   // }
   Day() {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -214,10 +214,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       InkWell(
                         onTap: () async {
                           await initPlatformState();
-                          await checkStatus();
+                          // await checkStatus();
                           await RegisterCheck();
                           shiftData = await Services().getDayShiftInfo(empID, Day());
-                          attendanceStatus = await AttendanceServices().getAttenRecStatus(empID, Day());
+                          await AttendanceServices().getAttenRecStatus(empID, Day());
                           if (shiftData != null) {
                             Navigator.push(
                                 context,
@@ -231,9 +231,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                           location: shiftData.locationName == null? "No Shift available":shiftData.locationName,
                                           dateOn: shiftData.dateOn,
                                           status: stuts,
-                                        attenID: attendanceStatus.id,
-                                      attenIn: attendanceStatus.attendCheckIn,
-                                      attenOut: attendanceStatus.attendCheckOut,
+                                      //   attenID: attendanceStatus?.id,
+                                      // attenIn: attendanceStatus?.attendCheckIn,
+                                      // attenOut: attendanceStatus?.attendCheckOut,
+                                      // attendID: attendanceStatus.id,
                                         )));
                           }
                         },
