@@ -10,7 +10,7 @@ class Services {
   Future getDayShiftInfo(id, day) async {
     var client = http.Client();
     var res = await client.get(
-      Uri.parse("http://192.168.15.124/hrm/fetch_today_shift_info.php?empID=${employeeNumberController.text.toString()}&DateOn="+day.toString()),);
+      Uri.parse("http://192.168.1.36/hrm/fetch_today_shift_info.php?empID=${employeeNumberController.text.toString()}&DateOn="+day.toString()),);
     if (res.statusCode == 200) {
       debugPrint("Data posted successfully");
       print(res.body);

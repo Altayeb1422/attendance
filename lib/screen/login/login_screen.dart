@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'dart:ui';
-import 'package:attendance/models/attendance_status_model.dart';
 import 'package:device_information/device_information.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -12,12 +12,14 @@ import '../../models/the_day_shift_info_model.dart';
 import '../../network/attendance_status_http_request.dart';
 import '../../network/the_day_shift_info_http_request.dart';
 import '../attendance/user_check_in_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 
 TextEditingController companyNumberController = TextEditingController();
 TextEditingController employeeNumberController = TextEditingController();
 var empID;
+var result;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -59,7 +61,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> initPlatformState() async {
     late String imeiNo = '';
     try {
+      // PermissionStatus status = await contacts.request();
+       var version = await DeviceInformation.platformVersion;
       imeiNo = await DeviceInformation.deviceIMEINumber;
+      print("IMEI: ${imeiNo}");
+      print(version);
     } on PlatformException catch (e) {
       if (kDebugMode) {
         print(e);
@@ -72,29 +78,55 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future RegisterCheck() async {
-    var res = await http.post(
-        Uri.parse("http://192.168.15.124/hrm/acc_verification.php"),
-        body: {
-          "CompanySerial": companyNumberController.text.toString(),
-          "EmpId": employeeNumberController.text.toString(),
-          "IME": _imeiNo.toString(),
-        }); //sending post request with header data
+    try {
+      inProgress = true;
+      var res = await http.post(
+          Uri.parse("http://192.168.1.36/hrm/acc_verification.php"),
+          body: {
+            "CompanySerial": companyNumberController.text.toString(),
+            "EmpId": employeeNumberController.text.toString(),
+            "IME": _imeiNo.toString(),
+          }); //sending post request with header data
+      if (res.statusCode == 200) {
+        setState(() {
+          inProgress = false;
+        });
+        print(res.body);
+        print("LogIN sucessful"); //print raw response on console
+        var data = json.decode(res.body);
+        empID = data["EmpId"];
+        result = data["Result"];
+        print(empID);
+        print(result);
+        print(data["IME"]); //decoding json to array
+      } else {
+        setState(() {
+          inProgress = false;
+        });
+        debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
+      }
+    }on SocketException catch(_){
+      setState(() {
+        inProgress = false;
+      });
+      Fluttertoast.showToast(
+          msg: "Check your internet connection",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
 
-    if (res.statusCode == 200) {
-      print(res.body);
-      print("Post sucessful"); //print raw response on console
-      var data = json.decode(res.body);
-      empID = data["EmpId"];
-      print(empID);
-      print(data["IME"]); //decoding json to array
-    } else {
-      debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
     }
   }
 
   var companyNumber;
   var employeeNumber;
-   var stuts;
+  var stuts;
+  var inProgress = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -213,29 +245,38 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Spacer(),
                       InkWell(
                         onTap: () async {
-                          await initPlatformState();
-                          // await checkStatus();
-                          await RegisterCheck();
+                           await initPlatformState();
+                           await RegisterCheck();
+                           print("Result: ${result}");
                           shiftData = await Services().getDayShiftInfo(empID, Day());
                           await AttendanceServices().getAttenRecStatus(empID, Day());
                           if (shiftData != null) {
-                            Navigator.push(
+                            if(result == "1"){
+                              print(employeeNumberController.text.toString());
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => UserCheckIn(
-                                          imeiNo: _imeiNo,
-                                          empID: empID,
-                                          totalHrs: shiftData.totalHoures == null? "--:--":shiftData.totalHoures,
-                                          clockOut: shiftData.checkOut == null? "--:--":shiftData.checkOut,
-                                          clockIn: shiftData.checkIn == null?"--:--":shiftData.checkIn,
-                                          location: shiftData.locationName == null? "No Shift available":shiftData.locationName,
-                                          dateOn: shiftData.dateOn,
-                                          status: stuts,
-                                      //   attenID: attendanceStatus?.id,
-                                      // attenIn: attendanceStatus?.attendCheckIn,
-                                      // attenOut: attendanceStatus?.attendCheckOut,
-                                      // attendID: attendanceStatus.id,
-                                        )));
+                                      imeiNo: _imeiNo,
+                                      empID: empID,
+                                      totalHrs: shiftData.totalHoures == null? "--:--":shiftData.totalHoures,
+                                      clockOut: shiftData.checkOut == null? "--:--":shiftData.checkOut,
+                                      clockIn: shiftData.checkIn == null?"--:--":shiftData.checkIn,
+                                      location: shiftData.locationName == null? "No Shift available":shiftData.locationName,
+                                      dateOn: shiftData.dateOn,
+                                      status: stuts,
+                                    )));}
+                            else if(result == "0"){
+                              Fluttertoast.showToast(
+                                  msg: "Check the employee number or the company number",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0
+                              );
+                            }
                           }
                         },
                         child: Container(
@@ -245,11 +286,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 BoxShadow(
                                     blurRadius: 7.0, color: Color(0xffa7a9af))
                               ]),
-                          child: const CircleAvatar(
+                          child:  CircleAvatar(
                             minRadius: 30,
                             maxRadius: 30,
                             backgroundColor: Colors.red,
-                            child: Icon(
+                            child: inProgress == true? CircularProgressIndicator(color: Colors.white,): Icon(
                               Icons.arrow_forward_ios,
                               color: Colors.white,
                               size: 25,

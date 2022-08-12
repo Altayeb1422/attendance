@@ -2,11 +2,11 @@ import 'package:attendance/api/local_auth_api.dart';
 import 'package:attendance/screen/home_screen.dart';
 import 'package:device_information/device_information.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 class RegisterUser extends StatefulWidget {
@@ -28,17 +28,42 @@ class _RegisterUserState extends State<RegisterUser> {
     super.initState();
     initPlatformState();
   }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    late String imeiNo = '';
-    try {
-      imeiNo = await DeviceInformation.deviceIMEINumber;
-    } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+  Future<bool?> askPermission() async{
+    PermissionStatus status = await Permission.phone.request();
+    if(status.isDenied == true)
+    {
+      askPermission();
     }
+    else
+    {
+      return true;
+    }
+  }
+
+  Future<void> initPlatformState() async {
+    late String platformVersion,
+        imeiNo = '';
+    // Platform messages may fail,
+    // so we use a try/catch PlatformException.
+    try {
+      PermissionStatus status = await Permission.phone.request();
+      if(status.isDenied == true)
+      {
+        askPermission();
+      }else
+      {
+        platformVersion = await DeviceInformation.platformVersion;
+        imeiNo = await DeviceInformation.deviceIMEINumber;
+        print(platformVersion);
+      }
+
+    } on PlatformException catch (e) {
+      platformVersion = '${e.message}';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
     if (!mounted) return;
 
     setState(() {
@@ -135,6 +160,7 @@ class _RegisterUserState extends State<RegisterUser> {
                     _location= "Lat: ${position.latitude}, Lon: ${position.longitude}";
                     await GetAddressFromLatLong(position);
                     print(_location);
+                    print("IMEI: ${_imeiNo}");
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>Home(imeiNo: _imeiNo, location: _location, Address: _Address,)));
 
                   }
