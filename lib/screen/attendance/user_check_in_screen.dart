@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:attendance/models/clock_view.dart';
 import 'package:attendance/screen/user/user.dart';
 import 'package:device_information/device_information.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,13 @@ import '../../widget/calendar widgets/date_widget.dart';
 import '../../widget/calendar widgets/time_widget.dart';
 import 'package:http/http.dart' as http;
 import '../login/login_screen.dart';
-
+import 'package:lottie/lottie.dart';
 
 DateTime now = DateTime.now();
 String formattedTime = DateFormat.jm().format(now);
 final DateFormat formatter = DateFormat('yyyy-MM-dd');
 final String formatted = formatter.format(now);
-
+var inProgress = false;
 class UserCheckIn extends StatefulWidget {
   UserCheckIn(
       {Key? key,
@@ -59,6 +60,7 @@ class _UserCheckInState extends State<UserCheckIn> {
   String _imeiNo = "";
   String _location = '';
   String _Address = '';
+
   @override
   void initState() {
     super.initState();
@@ -234,7 +236,7 @@ class _UserCheckInState extends State<UserCheckIn> {
   }
 
   var attenid;
-  var inProgress = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -263,7 +265,8 @@ class _UserCheckInState extends State<UserCheckIn> {
                           MaterialPageRoute(
                               builder: (context) => const User()));
                     },
-                    child: Hero(
+                    child:
+                    Hero(
                       tag: 'user_image',
                       child: Container(
                         decoration: BoxDecoration(
@@ -327,8 +330,7 @@ class _UserCheckInState extends State<UserCheckIn> {
                           print("checkStatus ${checkStatus}");
                         } else if (checkStatus == 1 && isAuthenticated) {
                           Position position = await _determinePosition();
-                          _location =
-                              "Lat: ${position.latitude}, Lon: ${position.longitude}";
+                          _location = "Lat: ${position.latitude}, Lon: ${position.longitude}";
                           await GetAddressFromLatLong(position);
                           print(_location);
                           print("IMEI: ${_imeiNo}");
@@ -343,41 +345,7 @@ class _UserCheckInState extends State<UserCheckIn> {
                           print("checkStatus ${checkStatus}");
                         }
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(120),
-                            boxShadow: const [
-                              BoxShadow(
-                                  blurRadius: 7.0, color: Color(0xffa7a9af))
-                            ]),
-                        child: CircleAvatar(
-                          minRadius: 120,
-                          maxRadius: 120,
-                          backgroundColor: checkStatus == 0
-                              ? Colors.blueAccent
-                              : Colors.green,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              inProgress == true
-                                  ? const SizedBox(height: 100,width: 100, child: CircularProgressIndicator(color: Colors.white,))
-                                  : const Icon(
-                                      Icons.fingerprint_rounded,
-                                      size: 130,
-                                      color: Colors.white,
-                                    ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                checkStatus == 0 ? "Clock In" : "clock Out",
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      child: ClockView(),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 40.0),
@@ -403,17 +371,14 @@ class _UserCheckInState extends State<UserCheckIn> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 80.0),
+                      padding: const EdgeInsets.only(top: 60.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              const Icon(
-                                Icons.timer_outlined,
-                                color: Colors.blueAccent,
-                              ),
+                              Lottie.asset('assets/lottie/clock_in.json',),
                               const SizedBox(
                                 height: 5,
                               ),
@@ -436,10 +401,7 @@ class _UserCheckInState extends State<UserCheckIn> {
                           ),
                           Column(
                             children: [
-                              const Icon(
-                                Icons.timer_off_outlined,
-                                color: Colors.redAccent,
-                              ),
+                              Lottie.asset('assets/lottie/clock_out.json',),
                               const SizedBox(
                                 height: 5,
                               ),
@@ -462,10 +424,7 @@ class _UserCheckInState extends State<UserCheckIn> {
                           ),
                           Column(
                             children: [
-                              const Icon(
-                                Icons.schedule,
-                                color: Colors.green,
-                              ),
+                              Lottie.asset('assets/lottie/working_hrs.json',),
                               const SizedBox(
                                 height: 5,
                               ),
