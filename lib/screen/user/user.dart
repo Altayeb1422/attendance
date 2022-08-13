@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'calendar/years_tabs.dart';
 
@@ -12,14 +13,14 @@ class UserState extends State<User> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         leading: Padding(
-          padding: const EdgeInsets.only(left: 20.0,),
+          padding: const EdgeInsets.only(left: 20.0, right: 20),
           child: IconButton( color: Colors.black, icon: const Icon(Icons.arrow_back_ios), onPressed: () { Navigator.pop(context); },),
         ),
       ),
@@ -38,7 +39,7 @@ class UserState extends State<User> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 50),
+                    fontSize: 50,fontFamily: 'Tajawal',),
               ),
             ),
             const SizedBox(
@@ -104,7 +105,7 @@ class UserState extends State<User> {
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
                       ),
                       const SizedBox(
                         height: 15,
@@ -114,14 +115,14 @@ class UserState extends State<User> {
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 30,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
                       ),
                       const Text(
                         "Yousif",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 30,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
                       ),
                       TextButton(
                           onPressed: () {},
@@ -130,7 +131,7 @@ class UserState extends State<User> {
                             style: TextStyle(
                                 color: Colors.deepOrangeAccent,
                                 fontSize: 20,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
                           ))
                     ],
                   ),
@@ -141,13 +142,13 @@ class UserState extends State<User> {
               height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 25.0, left: 25),
+              padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25),
               child: Text(
                 "Dashboard",
                 style: TextStyle(
                     color: Colors.grey.withOpacity(0.6),
                     fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold, fontFamily: 'Tajawal',),
               ),
             ),
             const SizedBox(
@@ -194,13 +195,13 @@ class UserState extends State<User> {
               onTap: () {},
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 25.0, left: 25),
+              padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25),
               child: Text(
                 "My Account",
                 style: TextStyle(
                     color: Colors.grey.withOpacity(0.6),
                     fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold, fontFamily: 'Tajawal',),
               ),
             ),
             Padding(
@@ -208,12 +209,12 @@ class UserState extends State<User> {
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
               child: TextButton(
                   onPressed: () {},
-                  child: const Text(
-                    "Log Out",
-                    style: TextStyle(
+                  child:  Text(
+                    "log out".tr(),
+                    style: const TextStyle(
                         color: Colors.deepOrangeAccent,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
                   )),
             )
           ],
@@ -267,7 +268,7 @@ class OptionsCard extends StatelessWidget {
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
             ),
             const Spacer(),
             Icon(
