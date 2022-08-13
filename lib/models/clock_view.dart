@@ -1,25 +1,20 @@
-
-
-
 import 'dart:async';
 import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:timer_builder/timer_builder.dart';
-
 import '../network/attendance_status_http_request.dart';
 import '../screen/attendance/user_check_in_screen.dart';
-import '../widget/calendar widgets/clock_widget.dart';
-import '../widget/calendar widgets/time_widget.dart';
+
 
 class ClockView extends StatefulWidget {
+  const ClockView({Key? key}) : super(key: key);
+
   @override
-  _ClockViewState createState() => _ClockViewState();
+  ClockViewState createState() => ClockViewState();
 }
 
-class _ClockViewState extends State<ClockView> {
+class ClockViewState extends State<ClockView> {
 
 
   @override
@@ -35,8 +30,8 @@ class _ClockViewState extends State<ClockView> {
     return Stack(
       children: [
         Container(
-          width: 250,
-          height: 250,
+          width: 300,
+          height: 300,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(150),
               boxShadow: const [
@@ -52,6 +47,9 @@ class _ClockViewState extends State<ClockView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
                 inProgress == true
                     ?Lottie.asset('assets/lottie/fingerprint.json', height: 180)
                     : const Icon(
@@ -59,21 +57,21 @@ class _ClockViewState extends State<ClockView> {
                   size: 180,
                   color: Colors.white,
                 ),
-                // const SizedBox(
-                //   height: 10,
-                // ),
+                const SizedBox(
+                  height: 16,
+                ),
                 Text(
-                  checkStatus == 0 ? "Clock In" : "clock Out",
+                  checkStatus == 0 ? "in".tr() : "out".tr(),
                   style: const TextStyle(
-                      color: Colors.white, fontSize: 18),
+                      color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                 )
               ],
             ),
           ),
         ),
         Container(
-          width: 250,
-          height: 250,
+          width: 300,
+          height: 300,
           child: Transform.rotate(
             angle: -pi / 2,
             child: CustomPaint(
@@ -139,17 +137,17 @@ class ClockPainter extends CustomPainter {
     canvas.drawCircle(center, radius - 40, fillBrush);
     canvas.drawCircle(center, radius - 5, outlineBrush);
     var hourHandX = centerX +
-        70 * cos((dateTime.hour * 30 + dateTime.minute * 0.5) * pi / 180);
+        80 * cos((dateTime.hour * 30 + dateTime.minute * 0.5) * pi / 180);
     var hourHandY = centerX +
-        70 * sin((dateTime.hour * 30 + dateTime.minute * 0.5) * pi / 180);
+        80 * sin((dateTime.hour * 30 + dateTime.minute * 0.5) * pi / 180);
     canvas.drawLine(center, Offset(hourHandX, hourHandY), hourHandBrush);
 
-    var minHandX = centerX + 85 * cos(dateTime.minute * 6 * pi / 180);
-    var minHandY = centerX + 85 * sin(dateTime.minute * 6 * pi / 180);
+    var minHandX = centerX + 100 * cos(dateTime.minute * 6 * pi / 180);
+    var minHandY = centerX + 100 * sin(dateTime.minute * 6 * pi / 180);
     canvas.drawLine(center, Offset(minHandX, minHandY), minHandBrush);
 
-    var secHandX = centerX + 90 * cos(dateTime.second * 6 * pi / 180);
-    var secHandY = centerX + 90 * sin(dateTime.second * 6 * pi / 180);
+    var secHandX = centerX + 120 * cos(dateTime.second * 6 * pi / 180);
+    var secHandY = centerX + 120 * sin(dateTime.second * 6 * pi / 180);
     canvas.drawLine(center, Offset(secHandX, secHandY), secHandBrush);
 
     canvas.drawCircle(center, 12, centerFillBrush);

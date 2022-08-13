@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:attendance/models/clock_view.dart';
 import 'package:attendance/screen/user/user.dart';
 import 'package:device_information/device_information.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../api/local_auth_api.dart';
 import '../../network/attendance_status_http_request.dart';
@@ -23,6 +24,7 @@ String formattedTime = DateFormat.jm().format(now);
 final DateFormat formatter = DateFormat('yyyy-MM-dd');
 final String formatted = formatter.format(now);
 var inProgress = false;
+
 class UserCheckIn extends StatefulWidget {
   UserCheckIn(
       {Key? key,
@@ -59,13 +61,15 @@ class UserCheckIn extends StatefulWidget {
 class _UserCheckInState extends State<UserCheckIn> {
   String _imeiNo = "";
   String _location = '';
-  String _Address = '';
+  String _address = '';
 
   @override
   void initState() {
     super.initState();
     askPermission();
-    print("Employee ID: $empID");
+    if (kDebugMode) {
+      print("Employee ID: $empID");
+    }
   }
 
   Future<bool?> askPermission() async {
@@ -88,7 +92,9 @@ class _UserCheckInState extends State<UserCheckIn> {
       } else {
         platformVersion = await DeviceInformation.platformVersion;
         imeiNo = await DeviceInformation.deviceIMEINumber;
-        print(platformVersion);
+        if (kDebugMode) {
+          print(platformVersion);
+        }
       }
     } on PlatformException catch (e) {
       platformVersion = '${e.message}';
@@ -145,20 +151,22 @@ class _UserCheckInState extends State<UserCheckIn> {
     );
   }
 
-  Future<void> GetAddressFromLatLong(Position position) async {
+  Future<void> getAddressFromLatLong(Position position) async {
     inProgress = true;
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks);
+    if (kDebugMode) {
+      print(placemarks);
+    }
     Placemark place = placemarks[0];
-    _Address =
+    _address =
         '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country},${place.name},${place.hashCode}';
     setState(() {
       inProgress = false;
     });
   }
 
-  Future CheckIN(date, formattedTime) async {
+  Future checkIn(date, formattedTime) async {
     try {
       inProgress = true;
       var res = await http
@@ -174,8 +182,12 @@ class _UserCheckInState extends State<UserCheckIn> {
         setState(() {
           inProgress = false;
         });
-        print(res.body);
-        print("Clock In successful"); //print raw response on console
+        if (kDebugMode) {
+          print(res.body);
+        }
+        if (kDebugMode) {
+          print("Clock In successful");
+        } //print raw response on console
       } else {
         debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
       }
@@ -212,11 +224,17 @@ class _UserCheckInState extends State<UserCheckIn> {
         setState(() {
           inProgress = false;
         });
-        print(res.body);
-        print("Clock Out successful"); //print raw response on console
+        if (kDebugMode) {
+          print(res.body);
+        }
+        if (kDebugMode) {
+          print("Clock Out successful");
+        } //print raw response on console
         var data = json.decode(res.body);
         // carAdsId = data["AdsId"];
-        print(data["Status"]); //decoding json to array
+        if (kDebugMode) {
+          print(data["Status"]);
+        } //decoding json to array
       } else {
         debugPrint("Something went wrong! Status Code is: ${res.statusCode}");
       }
@@ -235,7 +253,7 @@ class _UserCheckInState extends State<UserCheckIn> {
     }
   }
 
-  var attenid;
+  // var attenid;
 
   @override
   Widget build(BuildContext context) {
@@ -243,22 +261,19 @@ class _UserCheckInState extends State<UserCheckIn> {
       body: Center(
         child: ListView(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 40.0, left: 30),
-                  child: Text(
-                    "The Company",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 40.0, right: 30),
-                  child: InkWell(
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0, left: 30, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                   Text(
+                     "company".tr(),
+                     style: const TextStyle(
+                         color: Colors.black,
+                         fontWeight: FontWeight.bold,
+                         fontSize: 30,fontFamily: 'Tajawal',),
+                   ),
+                  InkWell(
                     onTap: () {
                       Navigator.push(
                           context,
@@ -285,12 +300,12 @@ class _UserCheckInState extends State<UserCheckIn> {
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
             const Padding(
-              padding: EdgeInsets.only(top: 65.0),
+              padding: EdgeInsets.only(top: 30.0),
               child: Center(child: Time()),
             ),
             const Padding(
@@ -299,7 +314,7 @@ class _UserCheckInState extends State<UserCheckIn> {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: 60.0),
+                padding: const EdgeInsets.only(top: 30.0),
                 child: Column(
                   children: [
                     InkWell(
@@ -311,41 +326,27 @@ class _UserCheckInState extends State<UserCheckIn> {
                             await LocalAuthApi.authentication();
                         if (checkStatus == 0 && isAuthenticated) {
                           Position position = await _determinePosition();
-                          _location =
-                              "Lat: ${position.latitude}, Lon: ${position.longitude}";
-                          await GetAddressFromLatLong(position);
-                          print(_location);
-                          print("IMEI: ${_imeiNo}");
-                          await CheckIN(date, formattedTime);
+                          _location = "Lat: ${position.latitude}, Lon: ${position.longitude}";
+                          await getAddressFromLatLong(position);
+                          await checkIn(date, formattedTime);
                           await AttendanceServices()
                               .getAttenRecStatus(empID, date);
-                          print("I have passed");
-                          // attenid =attendanceStatus!.id;
-                          print("Atten Id:$attId");
-                          print("checkStatus ${checkStatus}");
                           setState(() {
                             checkStatus;
                           });
 
-                          print("checkStatus ${checkStatus}");
                         } else if (checkStatus == 1 && isAuthenticated) {
                           Position position = await _determinePosition();
                           _location = "Lat: ${position.latitude}, Lon: ${position.longitude}";
-                          await GetAddressFromLatLong(position);
-                          print(_location);
-                          print("IMEI: ${_imeiNo}");
+                          await getAddressFromLatLong(position);
                           await checkOut(date, formattedTime);
-                          await AttendanceServices()
-                              .getAttenRecStatus(empID, date);
-                          print("Atten Id:$attId");
-                          print(formattedTime);
+                          await AttendanceServices().getAttenRecStatus(empID, date);
                           setState(() {
                             checkStatus;
                           });
-                          print("checkStatus ${checkStatus}");
                         }
                       },
-                      child: ClockView(),
+                      child: const ClockView(),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 40.0),
@@ -357,21 +358,21 @@ class _UserCheckInState extends State<UserCheckIn> {
                           const SizedBox(
                             width: 5,
                           ),
-                          const Text(
-                            "Location: ",
+                           Text(
+                            "location: ".tr(),
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 20),
+                                color: Colors.grey, fontSize: 17,fontFamily: 'Tajawal',),
                           ),
                           Text(
                             widget.location.toString(),
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 20),
+                                color: Colors.grey, fontSize: 20,fontFamily: 'Tajawal', ),
                           )
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 60.0),
+                      padding: const EdgeInsets.only(top: 40.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -386,16 +387,16 @@ class _UserCheckInState extends State<UserCheckIn> {
                                 widget.clockIn.toString(),
                                 style: const TextStyle(
                                     color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
                               ),
                               const SizedBox(
                                 height: 5,
                               ),
-                              const Text(
-                                "Clock in",
+                               Text(
+                                "in".tr(),
                                 style:
-                                    TextStyle(color: Colors.grey, fontSize: 15),
+                                    const TextStyle(color: Colors.grey,fontSize: 15,fontFamily: 'Tajawal', ),
                               ),
                             ],
                           ),
@@ -409,16 +410,16 @@ class _UserCheckInState extends State<UserCheckIn> {
                                 widget.clockOut.toString(),
                                 style: const TextStyle(
                                     color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
                               ),
                               const SizedBox(
                                 height: 5,
                               ),
-                              const Text(
-                                "Clock Out",
+                               Text(
+                                "out".tr(),
                                 style: const TextStyle(
-                                    color: Colors.grey, fontSize: 15),
+                                    color: Colors.grey, fontSize: 15, fontFamily: 'Tajawal',),
                               ),
                             ],
                           ),
@@ -432,16 +433,16 @@ class _UserCheckInState extends State<UserCheckIn> {
                                 widget.totalHrs.toString(),
                                 style: const TextStyle(
                                     color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
                               ),
                               const SizedBox(
                                 height: 5,
                               ),
-                              const Text(
-                                "Working Hrs",
+                               Text(
+                                "hrs".tr(),
                                 style:
-                                    TextStyle(color: Colors.grey, fontSize: 15),
+                                    const TextStyle(color: Colors.grey, fontSize: 15, fontFamily: 'Tajawal',),
                               ),
                             ],
                           ),
