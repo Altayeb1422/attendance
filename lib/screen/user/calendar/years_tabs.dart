@@ -69,13 +69,9 @@ class _YearsState extends State<Years>
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120.0),
+        preferredSize: Size.fromHeight(60.0),
         child: AppBar(
-          title: Center(child: Text("Calendar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 30),)),
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 20.0,),
-            child: IconButton( color: Colors.black, icon: Icon(Icons.arrow_back_ios), onPressed: () { Navigator.pop(context); },),
-          ),
+
           elevation: 0.0,
           backgroundColor: Colors.transparent,
           bottom: TabBar(
@@ -85,17 +81,17 @@ class _YearsState extends State<Years>
             labelColor: const Color(0xff864468),
             unselectedLabelColor: Colors.grey,
             controller: _tabController,
-            labelStyle: TextStyle(color:  Colors.black, fontWeight: FontWeight.bold, fontSize: 30),
-            unselectedLabelStyle: TextStyle(color:Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
-            indicator:BoxDecoration(
-              color: const Color(0xfffecb00),
+            labelStyle: const TextStyle(color:  Colors.black, fontWeight: FontWeight.bold, fontSize: 30),
+            unselectedLabelStyle: const TextStyle(color:Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
+            indicator:const BoxDecoration(
+              color: Color(0xfffecb00),
               borderRadius: BorderRadius.all(
                 Radius.circular(15),
               ),
             ),
             indicatorWeight: .09,
             indicatorSize: TabBarIndicatorSize.label,
-            indicatorPadding: EdgeInsets.only(top:40,left: 15, right: 15),
+            indicatorPadding: const EdgeInsets.only(top:40,left: 15, right: 15),
             tabs: [
               Tab(
                 text: _tabs[0].title,

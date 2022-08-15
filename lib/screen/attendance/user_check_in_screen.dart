@@ -18,6 +18,8 @@ import '../../widget/calendar widgets/time_widget.dart';
 import 'package:http/http.dart' as http;
 import '../login/login_screen.dart';
 import 'package:lottie/lottie.dart';
+import '../user/calendar/years_tabs.dart';
+
 
 DateTime now = DateTime.now();
 String formattedTime = DateFormat.jm().format(now);
@@ -170,7 +172,7 @@ class _UserCheckInState extends State<UserCheckIn> {
     try {
       inProgress = true;
       var res = await http
-          .post(Uri.parse("http://192.168.1.36/hrm/atte_record_In.php"), body: {
+          .post(Uri.parse("http://192.168.1.43/hrm/atte_record_In.php"), body: {
         "LocationName": "Khartoum-Tayif",
         "empID": widget.empID.toString(),
         "DateOn": date.toString(),
@@ -210,7 +212,7 @@ class _UserCheckInState extends State<UserCheckIn> {
     try {
       inProgress = true;
       var res = await http.post(
-          Uri.parse("http://192.168.1.36/hrm/atte_record_OUT.php"),
+          Uri.parse("http://192.168.1.43/hrm/atte_record_OUT.php"),
           body: {
             "LocationName": "Khartoum-Tayif",
             "empID": widget.empID.toString(),
@@ -253,207 +255,275 @@ class _UserCheckInState extends State<UserCheckIn> {
     }
   }
 
-  // var attenid;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0, left: 30, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                   Text(
-                     "company".tr(),
-                     style: const TextStyle(
-                         color: Colors.black,
-                         fontWeight: FontWeight.bold,
-                         fontSize: 30,fontFamily: 'Tajawal',),
-                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const User()));
-                    },
-                    child:
-                    Hero(
-                      tag: 'user_image',
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(35),
-                            boxShadow: const [
-                              BoxShadow(
-                                  blurRadius: 7.0, color: Color(0xffa7a9af))
-                            ]),
-                        child: const CircleAvatar(
-                          minRadius: 35,
-                          maxRadius: 35,
-                          backgroundColor: Colors.white10,
-                          foregroundImage: AssetImage(
-                            'assets/user.jpg',
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Flexible(
+          //   flex: 1,
+          //   fit:  FlexFit.tight,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Text(
+          //         "company".tr(),
+          //         style: const TextStyle(
+          //           color: Colors.black,
+          //           fontWeight: FontWeight.bold,
+          //           fontSize: 30,
+          //           fontFamily: 'Tajawal',
+          //         ),
+          //       ),
+          //       InkWell(
+          //         onTap: () {
+          //           Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) => const User()));
+          //         },
+          //         child: Hero(
+          //           tag: 'user_image',
+          //           child: Container(
+          //             decoration: BoxDecoration(
+          //                 borderRadius: BorderRadius.circular(35),
+          //                 boxShadow: const [
+          //                   BoxShadow(
+          //                       blurRadius: 7.0, color: Color(0xffa7a9af))
+          //                 ]),
+          //             child: const CircleAvatar(
+          //               minRadius: 35,
+          //               maxRadius: 35,
+          //               backgroundColor: Colors.white10,
+          //               foregroundImage: AssetImage(
+          //                 'assets/user.jpg',
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       )
+          //     ],
+          //   ),
+          // ),
+          SizedBox(height: 20,),
+          Flexible(
+            flex: 1,
+            child: Column(
+              children: const [
+                Time(),
+                Date()
+              ],
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 30.0),
-              child: Center(child: Time()),
+          ),
+          Flexible(
+            flex: 2,
+            fit: FlexFit.tight,
+            child: InkWell(
+              onTap: () async {
+                DateTime now = DateTime.now();
+                String formattedTime = DateFormat.jm().format(now);
+                DateTime date =
+                DateTime(now.year, now.month, now.day);
+                final isAuthenticated =
+                await LocalAuthApi.authentication();
+                if (checkStatus == 0 && isAuthenticated) {
+                  Position position = await _determinePosition();
+                  _location =
+                  "Lat: ${position.latitude}, Lon: ${position.longitude}";
+                  await getAddressFromLatLong(position);
+                  await checkIn(date, formattedTime);
+                  await AttendanceServices()
+                      .getAttenRecStatus(empID, date);
+                  setState(() {
+                    checkStatus;
+                  });
+                } else if (checkStatus == 1 && isAuthenticated) {
+                  Position position = await _determinePosition();
+                  _location =
+                  "Lat: ${position.latitude}, Lon: ${position.longitude}";
+                  await getAddressFromLatLong(position);
+                  await checkOut(date, formattedTime);
+                  await AttendanceServices()
+                      .getAttenRecStatus(empID, date);
+                  setState(() {
+                    checkStatus;
+                  });
+                }
+              },
+              child: const ClockView(),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 10.0),
-              child: Center(child: Date()),
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Column(
+          ),
+          Flexible(
+            flex: 1,
+            fit: FlexFit.tight,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                      onTap: () async {
-                        DateTime now = DateTime.now();
-                        String formattedTime = DateFormat.jm().format(now);
-                        DateTime date = DateTime(now.year, now.month, now.day);
-                        final isAuthenticated =
-                            await LocalAuthApi.authentication();
-                        if (checkStatus == 0 && isAuthenticated) {
-                          Position position = await _determinePosition();
-                          _location = "Lat: ${position.latitude}, Lon: ${position.longitude}";
-                          await getAddressFromLatLong(position);
-                          await checkIn(date, formattedTime);
-                          await AttendanceServices()
-                              .getAttenRecStatus(empID, date);
-                          setState(() {
-                            checkStatus;
-                          });
-
-                        } else if (checkStatus == 1 && isAuthenticated) {
-                          Position position = await _determinePosition();
-                          _location = "Lat: ${position.latitude}, Lon: ${position.longitude}";
-                          await getAddressFromLatLong(position);
-                          await checkOut(date, formattedTime);
-                          await AttendanceServices().getAttenRecStatus(empID, date);
-                          setState(() {
-                            checkStatus;
-                          });
-                        }
-                      },
-                      child: const ClockView(),
+                    const Icon(Icons.location_on_rounded,
+                        size: 25, color: Colors.red),
+                    const SizedBox(
+                      width: 5,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.location_on_rounded,
-                              size: 25, color: Colors.red),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                           Text(
-                            "location: ".tr(),
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 17,fontFamily: 'Tajawal',),
-                          ),
-                          Text(
-                            widget.location.toString(),
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 20,fontFamily: 'Tajawal', ),
-                          )
-                        ],
+                    Text(
+                      "location: ".tr(),
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 17,
+                        fontFamily: 'Tajawal',
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Lottie.asset('assets/lottie/clock_in.json',),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                widget.clockIn.toString(),
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                               Text(
-                                "in".tr(),
-                                style:
-                                    const TextStyle(color: Colors.grey,fontSize: 15,fontFamily: 'Tajawal', ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Lottie.asset('assets/lottie/clock_out.json',),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                widget.clockOut.toString(),
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                               Text(
-                                "out".tr(),
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 15, fontFamily: 'Tajawal',),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Lottie.asset('assets/lottie/working_hrs.json',),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                widget.totalHrs.toString(),
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                               Text(
-                                "hrs".tr(),
-                                style:
-                                    const TextStyle(color: Colors.grey, fontSize: 15, fontFamily: 'Tajawal',),
-                              ),
-                            ],
-                          ),
-                        ],
+                    Text(
+                      widget.location.toString(),
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                        fontFamily: 'Tajawal',
                       ),
                     )
                   ],
                 ),
-              ),
-            )
-          ],
+
+              ],
+            ),
+          ),
+          Flexible(
+            flex: 1,
+            fit: FlexFit.tight,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/lottie/clock_in.json',
+                      ),
+
+                      Text(
+                        widget.clockIn.toString(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Tajawal',
+                        ),
+                      ),
+                      Text(
+                        "in".tr(),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                          fontFamily: 'Tajawal',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/lottie/clock_out.json',
+                      ),
+
+                      Text(
+                        widget.clockOut.toString(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Tajawal',
+                        ),
+                      ),
+
+                      Text(
+                        "out".tr(),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                          fontFamily: 'Tajawal',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/lottie/working_hrs.json',
+                      ),
+                      Text(
+                        widget.totalHrs.toString(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Tajawal',
+                        ),
+                      ),
+                      Text(
+                        "hrs".tr(),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                          fontFamily: 'Tajawal',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class MenuItems extends StatelessWidget {
+  const MenuItems({
+    Key? key,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  }) : super(key: key);
+  final dynamic icon;
+  final Color color;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: const [
+                BoxShadow(blurRadius: 7.0, color: Color(0xffa7a9af))
+              ]),
+          child: CircleAvatar(
+            maxRadius: 28,
+            minRadius: 28,
+            foregroundColor: Colors.green,
+            backgroundColor: color,
+            child: icon,
+          ),
         ),
       ),
     );

@@ -30,10 +30,10 @@ class ClockViewState extends State<ClockView> {
     return Stack(
       children: [
         Container(
-          width: 300,
-          height: 300,
+          width: 250,
+          height: 250,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(150),
+              borderRadius: BorderRadius.circular(190),
               boxShadow: const [
                 BoxShadow(
                     blurRadius: 7.0, color: Color(0xffa7a9af))
@@ -48,18 +48,16 @@ class ClockViewState extends State<ClockView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 inProgress == true
-                    ?Lottie.asset('assets/lottie/fingerprint.json', height: 180)
+                    ?Lottie.asset('assets/lottie/fingerprint.json', height: 160)
                     : const Icon(
                   Icons.fingerprint_rounded,
-                  size: 180,
+                  size: 160,
                   color: Colors.white,
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
+
                 Text(
                   checkStatus == 0 ? "in".tr() : "out".tr(),
                   style: const TextStyle(
@@ -70,8 +68,8 @@ class ClockViewState extends State<ClockView> {
           ),
         ),
         Container(
-          width: 300,
-          height: 300,
+          width: 250,
+          height: 250,
           child: Transform.rotate(
             angle: -pi / 2,
             child: CustomPaint(
@@ -98,13 +96,13 @@ class ClockPainter extends CustomPainter {
     var centerY = size.height / 2;
     var center = Offset(centerX, centerY);
     var radius = min(centerX, centerY);
-    var icon = Icons.fingerprint_rounded;
+
 
     var fillBrush = Paint()..color = Colors.transparent;
-    var outlineBrush = Paint()
-      ..color = Color(0xFFEAECFF)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 16;
+    // var outlineBrush = Paint()
+    //   ..color = Color(0xFFEAECFF)
+    //   ..style = PaintingStyle.stroke
+    //   ..strokeWidth = 16;
 
     var centerFillBrush = Paint()..color = Color(0xFF444974);
 
@@ -135,19 +133,19 @@ class ClockPainter extends CustomPainter {
       ..strokeWidth = 1;
 
     canvas.drawCircle(center, radius - 40, fillBrush);
-    canvas.drawCircle(center, radius - 5, outlineBrush);
+    // canvas.drawCircle(center, radius - 5, outlineBrush);
     var hourHandX = centerX +
-        80 * cos((dateTime.hour * 30 + dateTime.minute * 0.5) * pi / 180);
+        70 * cos((dateTime.hour * 30 + dateTime.minute * 0.5) * pi / 180);
     var hourHandY = centerX +
-        80 * sin((dateTime.hour * 30 + dateTime.minute * 0.5) * pi / 180);
+        70 * sin((dateTime.hour * 30 + dateTime.minute * 0.5) * pi / 180);
     canvas.drawLine(center, Offset(hourHandX, hourHandY), hourHandBrush);
 
-    var minHandX = centerX + 100 * cos(dateTime.minute * 6 * pi / 180);
-    var minHandY = centerX + 100 * sin(dateTime.minute * 6 * pi / 180);
+    var minHandX = centerX + 90 * cos(dateTime.minute * 6 * pi / 180);
+    var minHandY = centerX + 90 * sin(dateTime.minute * 6 * pi / 180);
     canvas.drawLine(center, Offset(minHandX, minHandY), minHandBrush);
 
-    var secHandX = centerX + 120 * cos(dateTime.second * 6 * pi / 180);
-    var secHandY = centerX + 120 * sin(dateTime.second * 6 * pi / 180);
+    var secHandX = centerX + 100 * cos(dateTime.second * 6 * pi / 180);
+    var secHandY = centerX + 100 * sin(dateTime.second * 6 * pi / 180);
     canvas.drawLine(center, Offset(secHandX, secHandY), secHandBrush);
 
     canvas.drawCircle(center, 12, centerFillBrush);
@@ -160,7 +158,7 @@ class ClockPainter extends CustomPainter {
 
       var x2 = centerX + innerCircleRadius * cos(i * pi / 180);
       var y2 = centerX + innerCircleRadius * sin(i * pi / 180);
-      // canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashBrush);
+      canvas.drawLine(Offset(x1, y1), Offset(x2, y2), dashBrush);
     }
   }
 

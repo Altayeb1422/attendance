@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:attendance/screen/attendance/main_tabs.dart';
 import 'package:device_information/device_information.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -82,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       inProgress = true;
       var res = await http.post(
-          Uri.parse("http://192.168.1.36/hrm/acc_verification.php"),
+          Uri.parse("http://192.168.1.43/hrm/acc_verification.php"),
           body: {
             "CompanySerial": companyNumberController.text.toString(),
             "EmpId": employeeNumberController.text.toString(),
@@ -132,6 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
@@ -156,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ListView(
               children: [
                 const Padding(
-                  padding: EdgeInsets.only(left: 35.0, top: 160),
+                  padding: EdgeInsets.only(left: 35.0, top: 230),
                   child: Text(
                     "Welcome",
                     style: TextStyle(
@@ -166,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(left: 35.0, top: 10, bottom: 70),
+                  padding: EdgeInsets.only(left: 35.0, top: 10, bottom: 50),
                   child: Text(
                     "Login",
                     style: TextStyle(
@@ -186,6 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // validator: (value) => rangeValidator(value!),
                       controller: companyNumberController,
                       style: const TextStyle(color: Colors.black, fontSize: 22),
+
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 15),
@@ -233,17 +236,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 40),
+                      vertical: 40.0, horizontal: 40),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text(
-                        "Log In",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 35),
-                      ),
-                      const Spacer(),
                       InkWell(
                         onTap: () async {
                            await initPlatformState();
@@ -257,16 +253,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => UserCheckIn(
-                                      imeiNo: _imeiNo,
+                                    builder: (context) => MainTabs(imeiNo: _imeiNo,
                                       empID: empID,
                                       totalHrs: shiftData.totalHoures == null? "--:--":shiftData.totalHoures,
                                       clockOut: shiftData.checkOut == null? "--:--":shiftData.checkOut,
                                       clockIn: shiftData.checkIn == null?"--:--":shiftData.checkIn,
                                       location: shiftData.locationName == null? "No Shift available":shiftData.locationName,
                                       dateOn: shiftData.dateOn,
-                                      status: stuts,
-                                    )));}
+                                      status: stuts,)));}
                             else if(result == "0"){
                               Fluttertoast.showToast(
                                   msg: "Check the employee number or the company number",

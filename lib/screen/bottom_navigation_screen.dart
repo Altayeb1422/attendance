@@ -41,11 +41,15 @@ class BottomHomeScreenState extends State<BottomHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        physics: const NeverScrollableScrollPhysics(),
-        children: _screen,
+      body: Row(
+        children: [
+          PageView(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            physics: const NeverScrollableScrollPhysics(),
+            children: _screen,
+          ),
+        ],
       ),//destination screen
       bottomNavigationBar: AnimatedBottomNavigationBar(
         gapLocation: GapLocation.none,

@@ -37,7 +37,6 @@ class _DaysState extends State<Days> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children:  [
-
                         Text("14",style: TextStyle(color:  Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),
                         SizedBox(height: 8,),
                         Text("WED",style: TextStyle(color:  Colors.black, fontWeight: FontWeight.bold, fontSize: 25)),

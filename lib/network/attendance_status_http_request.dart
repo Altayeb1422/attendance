@@ -11,7 +11,7 @@ var checkStatus = 0;
 var attId;
 class AttendanceServices {
   postAttenRecStatus() async {
-    var res = await http.post(Uri.parse("http://192.168.1.36/hrm/fetch_atten_rec.php"),body: {
+    var res = await http.post(Uri.parse("http://192.168.1.43/hrm/fetch_atten_rec.php"),body: {
       "empID":empID,
       "RecDate": formatted.toString(),
     });
@@ -37,7 +37,7 @@ class AttendanceServices {
    getAttenRecStatus(id, day) async {
     var client = http.Client();
     var res = await client.get(
-      Uri.parse("http://192.168.1.36/hrm/get_atten_rec.php?empID=${id}&RecDate="+day.toString()),);
+      Uri.parse("http://192.168.1.43/hrm/get_atten_rec.php?empID=${id}&RecDate="+day.toString()),);
     if (res.statusCode == 200) {
       print(res.body);
       print("Get ATTENDANCE");
