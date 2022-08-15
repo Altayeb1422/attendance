@@ -386,109 +386,109 @@ class _UserCheckInState extends State<UserCheckIn> {
                     )
                   ],
                 ),
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        fit: FlexFit.tight,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/lottie/clock_in.json',
+                            ),
 
+                            Text(
+                              widget.clockIn.toString(),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Tajawal',
+                              ),
+                            ),
+                            Text(
+                              "in".tr(),
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15,
+                                fontFamily: 'Tajawal',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        fit: FlexFit.tight,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/lottie/clock_out.json',
+                            ),
+
+                            Text(
+                              widget.clockOut.toString(),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Tajawal',
+                              ),
+                            ),
+
+                            Text(
+                              "out".tr(),
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15,
+                                fontFamily: 'Tajawal',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        fit: FlexFit.tight,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/lottie/working_hrs.json',
+                            ),
+                            Text(
+                              widget.totalHrs.toString(),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Tajawal',
+                              ),
+                            ),
+                            Text(
+                              "hrs".tr(),
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15,
+                                fontFamily: 'Tajawal',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
-          Flexible(
-            flex: 1,
-            fit: FlexFit.tight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.tight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(
-                        'assets/lottie/clock_in.json',
-                      ),
 
-                      Text(
-                        widget.clockIn.toString(),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Tajawal',
-                        ),
-                      ),
-                      Text(
-                        "in".tr(),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15,
-                          fontFamily: 'Tajawal',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.tight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(
-                        'assets/lottie/clock_out.json',
-                      ),
-
-                      Text(
-                        widget.clockOut.toString(),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Tajawal',
-                        ),
-                      ),
-
-                      Text(
-                        "out".tr(),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15,
-                          fontFamily: 'Tajawal',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  fit: FlexFit.tight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(
-                        'assets/lottie/working_hrs.json',
-                      ),
-                      Text(
-                        widget.totalHrs.toString(),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Tajawal',
-                        ),
-                      ),
-                      Text(
-                        "hrs".tr(),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15,
-                          fontFamily: 'Tajawal',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
         ],
       ),
     );

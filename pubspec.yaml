@@ -50,6 +50,8 @@ dependencies:
   shimmer: ^2.0.0
   easy_localization: ^3.0.1
   lottie: ^1.4.1
+  fl_chart: ^0.55.1
+  syncfusion_flutter_charts: ^20.2.43
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'calendar/years_tabs.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class User extends StatefulWidget {
   const User({Key? key}) : super(key: key);
@@ -10,66 +11,48 @@ class User extends StatefulWidget {
 }
 
 class UserState extends State<User> {
-
+  late List<GDPData> _chartData;
+  late TooltipBehavior _tooltipBehavior;
+  @override
+  void initState() {
+    _chartData = getChartData();
+    _tooltipBehavior = TooltipBehavior(enable: true);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20),
-          child: IconButton( color: Colors.black, icon: const Icon(Icons.arrow_back_ios), onPressed: () { Navigator.pop(context); },),
-        ),
-      ),
+      // backgroundColor: Colors.white,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            const Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
-              child: Text(
-                "Profile",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50,fontFamily: 'Tajawal',),
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
+            const SizedBox(height: 25,),
             Padding(
               padding: const EdgeInsets.only(left: 30.0, right: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Hero(
-                    tag: 'user_image',
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * .23,
-                      width: MediaQuery.of(context).size.width * .43,
-                      decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(blurRadius: 7.0, color: Color(0xffa7a9af))
-                        ],
-                        borderRadius: BorderRadius.circular(20),
-                        image: const DecorationImage(
-                          image: AssetImage("assets/user.jpg"),
-                          fit: BoxFit.cover,
-                        ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * .23,
+                    width: MediaQuery.of(context).size.width * .43,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 7.0, color: Color(0xffa7a9af))
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      image: const DecorationImage(
+                        image: AssetImage("assets/user.jpg"),
+                        fit: BoxFit.cover,
                       ),
-
-                      // "assets/user.svg",
-                      // height:size.height * .20,
-                      // width: size.width * .20,
                     ),
+
+                    // "assets/user.svg",
+                    // height:size.height * .20,
+                    // width: size.width * .20,
                   ),
                   const Spacer(),
                   Column(
@@ -144,7 +127,7 @@ class UserState extends State<User> {
             Padding(
               padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25),
               child: Text(
-                "Dashboard",
+                "Statistics",
                 style: TextStyle(
                     color: Colors.grey.withOpacity(0.6),
                     fontSize: 20,
@@ -154,46 +137,27 @@ class UserState extends State<User> {
             const SizedBox(
               height: 15,
             ),
-            OptionsCard(
-              title: 'Notifications',
-              icon: const Icon(
-                Icons.notifications_none_outlined,
-                color: Colors.white,
-              ),
-              color: Colors.green,
-              onTap: () {},
-            ),
-            OptionsCard(
-              title: 'Calendar',
-              icon: const Icon(
-                Icons.calendar_month_outlined,
-                color: Colors.white,
-              ),
-              color: Colors.deepOrangeAccent,
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => const Years()));
-              },
-            ),
-
-            OptionsCard(
-              title: 'Help',
-              icon: const Icon(
-                Icons.help_outline,
-                color: Colors.white,
-              ),
-              color: Colors.blue,
-              onTap: () {},
-            ),
-            OptionsCard(
-              title: 'Contact Us',
-              icon: const Icon(
-                Icons.call_outlined,
-                color: Colors.white,
-              ),
+          SfCircularChart(
+            title:
+            ChartTitle(text: 'Attendance Data',textStyle: const TextStyle(
               color: Colors.grey,
-              onTap: () {},
-            ),
+              fontSize: 20,
+              fontWeight: FontWeight.bold, fontFamily: 'Tajawal',),),
+            legend:
+            Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
+            tooltipBehavior: _tooltipBehavior,
+            series: <CircularSeries>[
+              DoughnutSeries<GDPData, String>(
+                  dataSource: _chartData,
+                  xValueMapper: (GDPData data, _) => data.continent,
+                  yValueMapper: (GDPData data, _) => data.gdp,
+                  dataLabelSettings: const DataLabelSettings(isVisible: true),
+                  enableTooltip: true,
+                animationDuration: 1,
+                animationDelay: .5
+              )
+            ],
+          ),
             Padding(
               padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25),
               child: Text(
@@ -222,63 +186,20 @@ class UserState extends State<User> {
       ),
     );
   }
+  List<GDPData> getChartData() {
+    final List<GDPData> chartData = [
+      GDPData('Weekend', 52),
+      GDPData('Working Days', 260),
+      GDPData('Sick Days', 3),
+      GDPData('Vacation', 26),
+      GDPData('Absence', 7),
+    ];
+    return chartData;
+  }
 }
 
-class OptionsCard extends StatelessWidget {
-  const OptionsCard({
-    Key? key,
-    required this.icon,
-    required this.title,
-    required this.color,
-    required this.onTap,
-  }) : super(key: key);
-  final dynamic icon;
-  final String title;
-  final Color color;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-      child: InkWell(
-        onTap: onTap,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: const [
-                    BoxShadow(blurRadius: 7.0, color: Color(0xffa7a9af))
-                  ]),
-              child: CircleAvatar(
-                maxRadius: 28,
-                minRadius: 28,
-                foregroundColor: Colors.green,
-                backgroundColor: color,
-                child: icon,
-              ),
-            ),
-            const SizedBox(
-              width: 25,
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,fontFamily: 'Tajawal',),
-            ),
-            const Spacer(),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey.withOpacity(0.6),
-              size: 22,
-            )
-          ],
-        ),
-      ),
-    );
-  }
+class GDPData {
+  GDPData(this.continent, this.gdp);
+  final String continent;
+  final int gdp;
 }

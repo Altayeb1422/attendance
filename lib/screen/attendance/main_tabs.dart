@@ -1,28 +1,31 @@
 import 'package:attendance/screen/attendance/user_check_in_screen.dart';
+import 'package:attendance/screen/user/calendar/month_tabs.dart';
 import 'package:attendance/screen/user/calendar/years_tabs.dart';
+import 'package:attendance/screen/user/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../login/login_screen.dart';
 import '../notifications.dart';
 
-
-
 DateTime logout = DateTime.now();
 
 class MainTabs extends StatefulWidget {
-   MainTabs({Key? key,this.imeiNo,
-    this.empID,
-    this.attendID,
-    this.dateOn,
-    this.attenID,
-    this.attenIn,
-    this.attenOut,
-    this.status,
-    this.location,
-    this.clockIn,
-    this.clockOut,
-    this.totalHrs}) : super(key: key);
+  MainTabs(
+      {Key? key,
+      this.imeiNo,
+      this.empID,
+      this.attendID,
+      this.dateOn,
+      this.attenID,
+      this.attenIn,
+      this.attenOut,
+      this.status,
+      this.location,
+      this.clockIn,
+      this.clockOut,
+      this.totalHrs})
+      : super(key: key);
 
   String? imeiNo;
   String? empID;
@@ -40,8 +43,7 @@ class MainTabs extends StatefulWidget {
   _MainTabsState createState() => _MainTabsState();
 }
 
-class _MainTabsState extends State<MainTabs>
-    with TickerProviderStateMixin {
+class _MainTabsState extends State<MainTabs> with TickerProviderStateMixin {
   // final List _tabs = [
   //   Tab(
   //     child: Container(
@@ -103,19 +105,15 @@ class _MainTabsState extends State<MainTabs>
   // ];
   late TabController _tabController;
 
-
   @override
   void initState() {
-
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(_handleSelected);
     super.initState();
   }
 
   void _handleSelected() {
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -133,7 +131,7 @@ class _MainTabsState extends State<MainTabs>
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
         child: AppBar(
-         elevation: 0.0,
+          elevation: 0.0,
           backgroundColor: Colors.transparent,
           bottom: TabBar(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -144,7 +142,7 @@ class _MainTabsState extends State<MainTabs>
             controller: _tabController,
             // labelStyle: const TextStyle(color:  Colors.black, fontWeight: FontWeight.bold, fontSize: 30),
             // unselectedLabelStyle: const TextStyle(color:Colors.grey, fontWeight: FontWeight.bold, fontSize: 15),
-            indicator:const BoxDecoration(
+            indicator: const BoxDecoration(
               color: Color(0xfffecb00),
               borderRadius: BorderRadius.all(
                 Radius.circular(100),
@@ -153,18 +151,21 @@ class _MainTabsState extends State<MainTabs>
             //
             indicatorWeight: 5,
             // indicatorSize: TabBarIndicatorSize.label,
-            indicatorPadding: const EdgeInsets.only(top:40,left: 25, right: 25),
+            indicatorPadding:
+                const EdgeInsets.only(top: 40, left: 25, right: 25),
             tabs: [
               Tab(
                 child: Container(
-                  // decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(90),
-                  //     boxShadow: const [
-                  //       BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
-                  //     ]),
+                  width: 50,
+                  height: 70,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35),
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
+                      ]),
                   child: const CircleAvatar(
-                    maxRadius: 28,
-                    minRadius: 28,
+                    maxRadius: 35,
+                    minRadius: 35,
                     foregroundColor: Colors.green,
                     backgroundColor: Colors.blue,
                     child: Icon(
@@ -175,38 +176,21 @@ class _MainTabsState extends State<MainTabs>
                   ),
                 ),
               ),
+
               Tab(
                 child: Container(
-                  // decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(90),
-                  //     boxShadow: const [
-                  //       BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
-                  //     ]),
+                  width: 50,
+                  height: 70,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35),
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
+                      ]),
                   child: const CircleAvatar(
-                    maxRadius: 28,
-                    minRadius: 28,
+                    maxRadius: 35,
+                    minRadius: 35,
                     foregroundColor: Colors.green,
-                    backgroundColor: Colors.green,
-                    child: Icon(
-                      Icons.notifications_none_outlined,
-                      color: Colors.white,
-                      size: 35,
-                    ),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Container(
-                  // decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(90),
-                  //     boxShadow: const [
-                  //       BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
-                  //     ]),
-                  child: const CircleAvatar(
-                    maxRadius: 28,
-                    minRadius: 28,
-                    foregroundColor: Colors.green,
-                    backgroundColor: Colors.deepOrangeAccent,
+                    backgroundColor: Color(0xff864468),
                     child: Icon(
                       Icons.calendar_month_outlined,
                       color: Colors.white,
@@ -217,40 +201,53 @@ class _MainTabsState extends State<MainTabs>
               ),
               Tab(
                 child: Container(
-                  // decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(90),
-                  //     boxShadow: const [
-                  //       BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
-                  //     ]),
-                  child: const CircleAvatar(
-                    maxRadius: 28,
-                    minRadius: 28,
-                    foregroundColor: Colors.green,
-                    backgroundColor: Colors.grey,
-                    child: Icon(
-                      Icons.call_outlined,
-                      color: Colors.white,
-                      size: 35,
-                    ),
+                  width: 50,
+                  height: 70,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35),
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
+                      ]),
+                  child: Stack(
+                    children: const[
+                       CircleAvatar(
+                        maxRadius: 35,
+                        minRadius: 35,
+                        foregroundColor: Colors.green,
+                        backgroundColor: Colors.green,
+                        child: Icon(
+                          Icons.notifications_none_outlined,
+                          color: Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                      Positioned(
+                        right: 4,
+                        child: CircleAvatar(
+                        maxRadius: 5,
+                        minRadius: 5,
+                        foregroundColor: Colors.red,
+                        backgroundColor: Colors.red,
+                      ),),
+                    ],
                   ),
                 ),
               ),
               Tab(
                 child: Container(
-                  // decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(90),
-                  //     boxShadow: const [
-                  //       BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
-                  //     ]),
+                  width: 50,
+                  height: 70,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(35),
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 12.0, color: Color(0xffa7a9af))
+                      ]),
                   child: const CircleAvatar(
-                    maxRadius: 28,
-                    minRadius: 28,
-                    foregroundColor: Colors.green,
-                    backgroundColor: Colors.teal,
-                    child: Icon(
-                      Icons.settings_outlined,
-                      color: Colors.white,
-                      size: 35,
+                    minRadius: 35,
+                    maxRadius: 35,
+                    backgroundColor: Colors.white10,
+                    foregroundImage: AssetImage(
+                      'assets/user.jpg',
                     ),
                   ),
                 ),
@@ -264,20 +261,20 @@ class _MainTabsState extends State<MainTabs>
         height: size.height,
         child: TabBarView(
           controller: _tabController,
-          children:  [
-            UserCheckIn(imeiNo: widget.imeiNo,
+          children: [
+            UserCheckIn(
+              imeiNo: widget.imeiNo,
               empID: empID,
               totalHrs: widget.totalHrs,
               clockOut: widget.clockOut,
               clockIn: widget.clockIn,
               location: widget.location,
               dateOn: widget.dateOn,
-              status: widget.status,),
-
+              status: widget.status,
+            ),
+            Month(),
             Notifications(),
-            Years(),
-            Notifications(),
-            Years(),
+            User(),
           ],
         ),
       ),
