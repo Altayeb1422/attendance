@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import '../models/attendance_status_model.dart';
 import '../screen/attendance/user_check_in_screen.dart';
 import '../screen/login/login_screen.dart';
 
@@ -11,7 +10,7 @@ var checkStatus = 0;
 var attId;
 class AttendanceServices {
   postAttenRecStatus() async {
-    var res = await http.post(Uri.parse("http://192.168.1.35/hrm/fetch_atten_rec.php"),body: {
+    var res = await http.post(Uri.parse("http://192.168.1.33/hrm/fetch_atten_rec.php"),body: {
       "empID":empID,
       "RecDate": formatted.toString(),
     });
@@ -37,7 +36,7 @@ class AttendanceServices {
    getAttenRecStatus(id, day) async {
     var client = http.Client();
     var res = await client.get(
-      Uri.parse("http://192.168.1.35/hrm/get_atten_rec.php?empID=${id}&RecDate="+day.toString()),);
+      Uri.parse("http://192.168.1.33/hrm/get_atten_rec.php?empID=${id}&RecDate="+day.toString()),);
     if (res.statusCode == 200) {
       print(res.body);
       print("Get ATTENDANCE");

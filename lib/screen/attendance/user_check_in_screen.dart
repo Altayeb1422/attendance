@@ -172,7 +172,7 @@ class _UserCheckInState extends State<UserCheckIn> {
     try {
       inProgress = true;
       var res = await http
-          .post(Uri.parse("http://192.168.1.43/hrm/atte_record_In.php"), body: {
+          .post(Uri.parse("http://192.168.1.33/hrm/atte_record_In.php"), body: {
         "LocationName": "Khartoum-Tayif",
         "empID": widget.empID.toString(),
         "DateOn": date.toString(),
@@ -212,7 +212,7 @@ class _UserCheckInState extends State<UserCheckIn> {
     try {
       inProgress = true;
       var res = await http.post(
-          Uri.parse("http://192.168.1.43/hrm/atte_record_OUT.php"),
+          Uri.parse("http://192.168.1.33/hrm/atte_record_OUT.php"),
           body: {
             "LocationName": "Khartoum-Tayif",
             "empID": widget.empID.toString(),
@@ -343,6 +343,7 @@ class _UserCheckInState extends State<UserCheckIn> {
                   Position position = await _determinePosition();
                   _location =
                   "Lat: ${position.latitude}, Lon: ${position.longitude}";
+                  print(_location);
                   await getAddressFromLatLong(position);
                   await checkOut(date, formattedTime);
                   await AttendanceServices()

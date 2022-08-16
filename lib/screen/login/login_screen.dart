@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       inProgress = true;
       var res = await http.post(
-          Uri.parse("http://192.168.1.35/hrm/acc_verification.php"),
+          Uri.parse("http://192.168.1.33/hrm/acc_verification.php"),
           body: {
             "CompanySerial": companyNumberController.text.toString(),
             "EmpId": employeeNumberController.text.toString(),

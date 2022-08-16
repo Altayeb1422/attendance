@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class User extends StatefulWidget {
   const User({Key? key}) : super(key: key);
@@ -125,7 +124,115 @@ class UserState extends State<User> {
               height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25),
+              padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25, bottom: 8),
+              child: Text(
+                "Requests",
+                style: TextStyle(
+                  color: Colors.grey.withOpacity(0.6),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold, fontFamily: 'Tajawal',),
+              ),
+            ),
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children:  [
+                  InkWell(
+                    onTap:(){},
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(150),
+                      ),
+                      color: const Color(0xff746d83),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Tab(
+                            child: SizedBox(
+                              width: 50,
+                              height: 70,
+                              child:  CircleAvatar(
+                                maxRadius: 25,
+                                minRadius: 25,
+                                foregroundColor: Colors.green,
+                                backgroundColor: Color(0xff746d83),
+                                child: Icon(
+                                  Icons.sick,
+                                  color: Colors.white,
+                                  size: 35,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10.0, top: 8),
+                            child: Text(
+                              "Medical",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold, fontFamily: 'Tajawal',),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: (){},
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(150),
+                      ),
+                      color: const Color(0xff90a97d),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Tab(
+                            child: SizedBox(
+                              width: 50,
+                              height: 70,
+                              child:  CircleAvatar(
+                                maxRadius: 25,
+                                minRadius: 25,
+                                foregroundColor: Colors.green,
+                                backgroundColor: Color(0xff90a97d),
+                                child: Icon(
+                                  Icons.monetization_on,
+                                  color: Colors.white,
+                                  size: 35,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 10.0, top: 8),
+                            child: Text(
+                              " Loan    ",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold, fontFamily: 'Tajawal',),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0, left: 25, right: 25),
               child: Text(
                 "Statistics",
                 style: TextStyle(

@@ -24,7 +24,11 @@ class ClockViewState extends State<ClockView> {
     });
     super.initState();
   }
-
+  @override
+  void dispose() {
+    print('Dispose used');
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
