@@ -86,7 +86,6 @@ class _NotificationsState extends State<Notifications> {
                         color: Colors.white, fontFamily: 'avenir'),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       const Text(
                         "Medical Leave",
@@ -96,6 +95,11 @@ class _NotificationsState extends State<Notifications> {
                             fontSize: 24,
                             fontWeight: FontWeight.w700),
                       ),
+                      Spacer(),
+                      const Text(
+                        'Pending',
+                        style: TextStyle(
+                            color: Colors.white, fontFamily: 'avenir'),),
                       IconButton(
                           icon: const Icon(Icons.pending),
                           color: Colors.black54,
@@ -108,7 +112,7 @@ class _NotificationsState extends State<Notifications> {
               ),
             ),
             Positioned(
-              right: 0,
+              left: 0,
               top: 0,
               child: CircleAvatar(
                 maxRadius: 7,
@@ -141,6 +145,14 @@ class _NotificationsState extends State<Notifications> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Center(
+                child: Text(
+                  "Tue, Aug 16",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'avenir'),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -166,7 +178,7 @@ class _NotificationsState extends State<Notifications> {
                     foregroundColor: Colors.green,
                     backgroundColor: Colors.transparent,
                     child: Icon(
-                      Icons.person_off,
+                      Icons.luggage,
                       color: Colors.white,
                       size: 35,
                     ),
@@ -179,7 +191,6 @@ class _NotificationsState extends State<Notifications> {
                     color: Colors.white, fontFamily: 'avenir'),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   const Text(
                     "Vacation",
@@ -189,13 +200,30 @@ class _NotificationsState extends State<Notifications> {
                         fontSize: 24,
                         fontWeight: FontWeight.w700),
                   ),
+                  Spacer(),
+                  const Text(
+                    'Denied',
+                    style: TextStyle(
+                        color: Colors.white, fontFamily: 'avenir'),),
                   IconButton(
-                      icon: const Icon(Icons.pending),
-                      color: Colors.black54,
+                      icon: const Icon(Icons.cancel),
+                      color: Color(0xffff889a),
                       onPressed: () {
                         // deleteAlarm(alarm.id);
                       }),
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    "Tue, Aug 16",
+                    style: TextStyle(
+                        color: Color(0xffff889a),
+                        fontFamily: 'avenir'),
+                  ),
+                ),
               ),
             ],
           ),
@@ -223,6 +251,14 @@ class _NotificationsState extends State<Notifications> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Center(
+                child: Text(
+                  "Tue, Aug 16",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'avenir'),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -261,7 +297,6 @@ class _NotificationsState extends State<Notifications> {
                     color: Colors.white, fontFamily: 'avenir'),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   const Text(
                     "Cash Loan",
@@ -271,6 +306,15 @@ class _NotificationsState extends State<Notifications> {
                         fontSize: 24,
                         fontWeight: FontWeight.w700),
                   ),
+                  Spacer(),
+                  Center(
+                    child: Text(
+                      "Approved",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'avenir'),
+                    ),
+                  ),
                   IconButton(
                       icon: const Icon(Icons.check_circle),
                       color: Colors.yellow,
@@ -278,6 +322,19 @@ class _NotificationsState extends State<Notifications> {
                         // deleteAlarm(alarm.id);
                       }),
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+
+                    "Tue, Aug 16",
+                    style: TextStyle(
+                        color: Colors.yellow,
+                        fontFamily: 'avenir'),
+                  ),
+                ),
               ),
             ],
           ),

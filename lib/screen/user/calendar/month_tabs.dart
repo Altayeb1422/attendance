@@ -174,6 +174,7 @@ class _MonthState extends State<Month>
         width: size.width,
         height: size.height,
         child: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
           controller: _tabController,
           children:  [
             Days(),

@@ -161,7 +161,7 @@ class UserState extends State<User> {
                                 foregroundColor: Colors.green,
                                 backgroundColor: Color(0xff746d83),
                                 child: Icon(
-                                  Icons.sick,
+                                  Icons.directions_walk,
                                   color: Colors.white,
                                   size: 35,
                                 ),
@@ -171,7 +171,7 @@ class UserState extends State<User> {
                           Padding(
                             padding: EdgeInsets.only(right: 10.0, top: 8),
                             child: Text(
-                              "Medical",
+                              "Leave  ",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 22,
@@ -266,7 +266,7 @@ class UserState extends State<User> {
             ],
           ),
             Padding(
-              padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25),
+              padding: const EdgeInsets.only(left: 25, right: 25),
               child: Text(
                 "My Account",
                 style: TextStyle(
@@ -276,8 +276,7 @@ class UserState extends State<User> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+              padding: const EdgeInsets.only(left: 25, right: 25, bottom: 20),
               child: TextButton(
                   onPressed: () {},
                   child:  Text(
